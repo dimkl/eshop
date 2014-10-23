@@ -5,30 +5,20 @@
  *
  * @author dimkl
  */
-class ProductController implements IController {
+class ProductController extends Controller {
 
-    public function __construct() {
-        
-    }
+    protected function preview($productid) {
+        $productid = intval($productid);
+        $userid = intval(Authorization::getCurrrentUserid());
+        //getData
+        Model::load(['ProductModel', 'UserModel', 'CommentUserModel']);
 
-    public function preview() {
-        //setup requirements
-        include Router::$modelPath . '/ProductModel.php';
-        include Router::$modelPath . '/UserModel.php';
-        include Router::$modelPath . '/CommentModel.php';
+        $comments = CommentUserModel::findBy('productid', $productid);
+        $product = ProductModel::findById($productid);
+        $user = UserModel::findById(1);
+        var_dump($comments);
         //
-        try {
-            $comments = CommentModel::findWithJoin('productid', 1, ['User' => 'Comment.userid=User.id']);
-            $user = UserModel::findByid(1);
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
-        if ($user === NULL || $comments === NULL) {
-            include Router::$viewPath . "/errorPage.html";
-            exit();
-        }
-        //render view
-        include Router::$viewPath . '/product/preview.php';
+        View::render('product/preview.php', compact('comments', 'product', 'user'));
     }
 
 }

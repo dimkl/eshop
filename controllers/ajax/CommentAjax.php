@@ -1,24 +1,17 @@
 <?php
 
+include './libs/Request.php';
+include './libs/Response.php';
+
 /**
- * CommentAjax is a class responsible for ajax requests for the Comment Entity
+ * Description of CommentAjax
  *
  * @author dimkl
  */
-class CommentAjax implements IAjax {
-    /*
-     * 
-     */
+class CommentAjax extends Controller {
 
-    public function __construct() {
-        
-    }
-
-    public function get($id = null) {
-        
-    }
-
-    public function create() {
+    protected function create() {
+        Request::allowOnlyMethod(Request::POSTMETHOD);
         
     }
 

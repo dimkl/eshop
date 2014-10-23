@@ -53,6 +53,19 @@
                         <div class="padding">
                             <div class="full col-sm-9">
 
+                                <div class="col-xs-12">
+                                    <div class="col-xs-5">
+                                        <img src="http://api.randomuser.me/portraits/thumb/men/19.jpg"/>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <h3 class="">
+                                            <?php echo $product->getName() ?>
+                                        </h3>
+                                        <div class="col-xs-12">
+                                            <?php echo $product->getDescription() ?>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- content -->
 
                                 <div class="col-sm-12" id="featured">   
@@ -64,14 +77,11 @@
                                     <!--/top story-->
                                     <div class="row">    
                                         <div class="col-sm-10">
-                                            <h3>This is Some Awesome Featured Content</h3>
+                                            <h3><?php echo $comment->getContent(); ?>asdfasfasdf</h3>
                                             <h4 class="col-xs-12">
                                                 <span class="label label-default col-xs-3"><?php echo "{$comment->getUser()->getFirstName()} {$comment->getUser()->getLastName()}"; ?> </span>
-                                                <span class="raty col-xs-5" data-score="<?php echo $comment->getRating(); ?>" data-number="10" ></span>
+                                                <span class="raty col-xs-4" data-score="<?php echo $comment->getRating(); ?>" data-number="10" ></span>
                                                 <span class="text-muted col-xs-4"><small><?php echo $comment->getCreationDatetime(); ?></small> </span>
-                                            </h4>
-                                            <h4 class="col-xs-12">
-                                                <small class="text-muted"><?php echo $comment->getContent(); ?></small>
                                             </h4>
                                         </div>
                                         <div class="col-sm-2">

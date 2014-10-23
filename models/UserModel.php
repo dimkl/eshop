@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of UserModel
  *
@@ -13,46 +7,60 @@
  */
 class UserModel extends Model {
 
-    private static $_table = "User";
+    protected static $table = 'User';
+    protected $publicProperties = ['id', 'email', 'firstname', 'lastname'];
     private $id;
     private $email;
     private $password;
     private $firstname;
     private $lastname;
-//
-    protected $_properties = ["id", "email", "password", "firstname", "lastname"];
 
-    public function __construct() {
-    }
-
-    public static function getTable() {
-
-        return self::$_table;
-    }
-
-    public function setId($id) {
-        if (!is_int($id)) {
-            throw new Exception("Id must be of int type");
+    public function authenticate() {
+        try {
+            $table = static::getTable();
+            $statement = static::$db->pdo->prepare('Select email, password from ' . $table . ' where email=? and password=?');
+            $statement->execute([$this->getEmail(), $this->getPassword()]);
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            if ($result !== FALSE) {
+                return TRUE;
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
-        $this->id = $id;
+        return FALSE;
+    }
 
-        return $this;
+    public function register() {
+        $values = [
+            "email" => $this->getEmail(),
+            "firstname" => $this->getFirstname(),
+            "lastname" => $this->getLastname(),
+            "password" => $this->getPassword()
+        ];
+        $table = static::getTable();
+
+        try {
+            $statement = static::$db->pdo->prepare('Insert into '
+                    . $table . '(email,firstname,lastname,password) '
+                    . 'Values(:email,:firstname,:lastname,:password)');
+            return $statement->execute($values);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
     }
 
     public function getId() {
-        return $this->email;
+        return $this->id;
     }
 
-    public function setEmail($email) {
-        if (!is_string($email)) {
-            throw new Exception("Email must be of string type");
+    public function setId($id) {
+        if (!is_string($id) && !is_int($id)) {
+            throw new Exception('$id must be a int');
         }
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Email format is not valid");
+        if (is_null($this->id)) {
+            $this->id = intval($id);
         }
-
-        $this->email = $email;
-
         return $this;
     }
 
@@ -60,15 +68,11 @@ class UserModel extends Model {
         return $this->email;
     }
 
-    public function setPassword($password) {
-        if (!is_string($password)) {
-            throw new Exception("Password must be of string type");
+    public function setEmail($email) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception('$email must be a email type');
         }
-        if (strlen($password) < 6) {
-            throw new Exception("Password must be more than 6 characters");
-        }
-        $this->password = $password;
-
+        $this->email = $email;
         return $this;
     }
 
@@ -76,12 +80,11 @@ class UserModel extends Model {
         return $this->password;
     }
 
-    public function setFirstname($firstname) {
-        if (!is_string($firstname)) {
-            throw new Exception("Firstname must be of string type");
+    public function setPassword($password) {
+        if (!is_string($password)) {
+            throw new Exception('$password must be a string');
         }
-        $this->firstname = $firstname;
-
+        $this->password = Model::hash($password);
         return $this;
     }
 
@@ -89,17 +92,24 @@ class UserModel extends Model {
         return $this->firstname;
     }
 
-    public function setLastname($lastname) {
-        if (!is_string($lastname)) {
-            throw new Exception("Lastname must be of string type");
+    public function setFirstname($firstname) {
+        if (!is_string($firstname)) {
+            throw new Exception('$firstname must be a string');
         }
-        $this->lastname = $lastname;
-
+        $this->firstname = $firstname;
         return $this;
     }
 
     public function getLastname() {
         return $this->lastname;
+    }
+
+    public function setLastname($lastname) {
+        if (!is_string($lastname)) {
+            throw new Exception('$lastname must be a string');
+        }
+        $this->lastname = $lastname;
+        return $this;
     }
 
 }

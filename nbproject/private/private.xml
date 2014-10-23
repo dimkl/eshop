@@ -3,13 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/controllers/navigation/ProductController.php</file>
-            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/index.php</file>
-            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/libs/Router.php</file>
-            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/models/UserModel.php</file>
-            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/views/product/preview.php</file>
-            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/views/user/register.php</file>
-            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/assets/css/site.css</file>
+            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/libs/Model.php</file>
+            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/libs/Server.php</file>
+            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/libs/Controller.php</file>
+            <file>file:/G:/Users/dimitriskl/Documents/NetBeansProjects/Eshop/models/CommentModel.php</file>
         </group>
     </open-files>
 </project-private>

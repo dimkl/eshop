@@ -7,99 +7,48 @@
  */
 class ProductModel extends Model {
 
-    private static $_table = "Product";
+    protected static $table = 'Product';
+    protected $publicProperties = ['id', 'name', 'description'];
     private $id;
     private $name;
     private $description;
-    //
-    protected $_properties = ["id", "name", "description"];
 
-    public function __construct() {
-        
-    }
-
-    /**
-     * Getter of table name that is source of this model
-     * 
-     * @return string 
-     */
-    public static function getTable() {
-        return self::$_table;
-    }
-
-    /**
-     * Setter of id
-     * 
-     * @param int $id
-     * @return \ProductModel Cascading pattern implemenented
-     * @throws Exception
-     */
-    public function setId($id) {
-        if (!is_int($id)) {
-            throw new Exception("Id must be of int type");
-        }
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Getter of id
-     * 
-     * @return int
-     */
     public function getId() {
         return $this->id;
     }
 
-    /**
-     * Setter of name
-     * 
-     * @param string $name
-     * @return \ProductModel Cascading pattern implemenented
-     * @throws Exception
-     */
-    public function setName($name) {
-        if (!is_string($name)) {
-            throw new Exception("Name must be of string type");
+    public function setId($id) {
+        if (!is_string($id) && !is_int($id)) {
+            throw new Exception('$id must be a int');
         }
-        $this->name = $name;
-
+        if (is_null($this->id)) {
+            $this->id = intval($id);
+        }
         return $this;
     }
 
-    /**
-     * Getter of name
-     * 
-     * @return string
-     */
     public function getName() {
         return $this->name;
     }
 
-    /**
-     * Setter of description
-     * 
-     * @param type $description
-     * @return \ProductModel Cascading pattern implemenented
-     * @throws Exception
-     */
-    public function setDescription($description) {
-        if (!is_string($description)) {
-            throw new Exception("Description must be of string type");
+    public function setName($name) {
+        if (!is_string($name)) {
+            throw new Exception('$name must be a string');
         }
-        $this->description = $description;
-
+        $this->name = $name;
         return $this;
     }
 
-    /**
-     * Getter of description
-     * 
-     * @return string
-     */
     public function getDescription() {
         return $this->description;
+    }
+
+    public function setDescription($description) {
+        if (!is_string($description)) {
+            throw new Exception('$description must be a string');
+        }
+        $this->description = $description;
+        return $this;
     }
 
 }

@@ -1,24 +1,20 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of AccountController
  *
  * @author dimkl
  */
-class AccountController implements IController {
+class AccountController extends Controller {
 
-    public function register() {
-        include Router::$viewPath . '/user/register.php';
+    protected function register() {
+        echo "product page default";
+//        View::load("error/default.html");
     }
 
-    public function login() {
-        include Router::$viewPath . '/user/login.php';
+    protected function login() {
+        echo "product page default";
+//        View::load("error/default.html");
     }
 
 }

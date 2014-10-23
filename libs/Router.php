@@ -1,154 +1,297 @@
 <?php
 
 /**
- * Description of RouterException
- *
- * @author dimkl
- */
-class RouterException extends Exception {
-    
-}
-
-/**
- * 
+ * ControllerType abstract class used as Enumeration with more functionality 
+ * for getting some information relevant with controller and controller type
  */
 abstract class ControllerType {
 
-    const AJAX = 1;
-    const NAVIGATION = 2;
+    /**
+     * Controller type constant for type of Navigation
+     */
+    const NAVIGATION = 1;
 
-    public static function getType($name) {
-        if (!is_string($name)) {
-            throw new Exception("Name in Controller type is not a string");
+    /**
+     * Controller type constant for type of Ajax
+     */
+    const AJAX = 2;
+
+    /**
+     * Controller type constant for type of Error
+     */
+    const ERROR = 3;
+
+    /**
+     * Controller settings for Navigation Controller Type 
+     * 
+     * @var array 
+     */
+    private static $navigationSettings = [
+        "context" => "navigation",
+        "prefix" => "",
+        "suffix" => "Controller"
+    ];
+
+    /**
+     * Controller settings for Ajax Controller Type
+     * 
+     * @var array 
+     */
+    private static $ajaxSettings = [
+        "context" => "ajax",
+        "prefix" => "",
+        "suffix" => "Ajax"
+    ];
+
+    /**
+     * Controller settings for Error Controller Type
+     * 
+     * @var array 
+     */
+    private static $errorSettings = [
+        "context" => "navigation",
+        "prefix" => "",
+        "suffix" => "Controller"
+    ];
+
+    /**
+     * Get Controller context (folder) based on string supplied
+     * 
+     * @param string $urlContext
+     * @return string
+     * @throws Exception if $urlContext isn't valid
+     */
+    public static function getContext($urlContext) {
+        if (!is_string($urlContext)) {
+            throw new Exception("Url Context supplied in ControllerType.getContext method must be of type string");
         }
-        if (strtolower($name) === "ajax") {
-            return ControllerType::AJAX;
-        } else if (strtolower($name) === "navigation") {
-            return ControllerType::NAVIGATION;
+        if ($urlContext === static::$navigationSettings["context"]) {
+            return static::$navigationSettings["context"];
+        } else if ($urlContext === static::$ajaxSettings["context"]) {
+            return static::$ajaxSettings["context"];
+        } else {
+            return static::$errorSettings["context"];
         }
-        throw new Exception("Name in Controller type does not correspond to a valid type");
     }
 
-    public static function getName($type) {
-        if (!is_int($type)) {
-            throw new Exception("Type in Controller type is not an int");
+    /**
+     *  Get Controller type based on string supplied
+     * 
+     * @param string $urlContext
+     * @return int
+     * @throws Exception
+     */
+    public static function getType($urlContext) {
+        if (!is_string($urlContext)) {
+            throw new Exception("Url Context supplied in ControllerType.getType method must be of type string");
         }
+        if ($urlContext === static::$navigationSettings["context"]) {
+            return ControllerType::NAVIGATION;
+        } else if ($urlContext === static::$ajaxSettings["context"]) {
+            return ControllerType::AJAX;
+        }
+        return ControllerType::ERROR;
+    }
 
-        if ($type === ControllerType::AJAX) {
-            return "ajax";
-        } else if ($type === ControllerType::NAVIGATION) {
-            return "navigation";
+    /**
+     * Get Preffix for controller class based on the controller type
+     * 
+     * @param string $urlContext
+     * @return string
+     * @throws Exception if supplied context string is not of string type
+     */
+    public static function getPrefix($urlContext) {
+        if (!is_string($urlContext)) {
+            throw new Exception("Url Context supplied in ControllerType.getPrefix method must be of type string");
         }
-        throw new Exception("Type in Controller type is not valid type");
+        if ($urlContext === static::$navigationSettings["context"]) {
+            return static::$navigationSettings["prefix"];
+        } else if ($urlContext === static::$ajaxSettings["context"]) {
+            return static::$ajaxSettings["prefix"];
+        }
+        return static::$errorSettings["prefix"];
+    }
+
+    /**
+     * Get Suffix for controller class based on the controller type
+     * 
+     * @param string $urlContext
+     * @return string
+     * @throws Exception if supplied context string is not of string type
+     */
+    public static function getSuffix($urlContext) {
+        if (!is_string($urlContext)) {
+            throw new Exception("Url Context supplied in ControllerType.getSuffix method must be of type string");
+        }
+        if ($urlContext === static::$navigationSettings["context"]) {
+            return static::$navigationSettings["suffix"];
+        } else if ($urlContext === static::$ajaxSettings["context"]) {
+            return static::$ajaxSettings["suffix"];
+        }
+        return static::$errorSettings["suffix"];
     }
 
 }
 
 /**
- * Description of Router
+ *  Router class used for get routing request that derive from SERVER global variable 
+ *  to the correspoding controller
  *
  * @author dimkl
  */
 class Router {
 
-    private static $pathInfo = "";
-    private static $controller = "";
-    private static $controllerAction = "";
-    private static $controllerParameters = [];
-//
-    public static $controllerPath = "./controllers";
-    public static $viewPath = "./views";
-    public static $modelPath = "./models";
-    public static $libPath = "./libs";
-//
-    public static $defaultController = "ProductController";
-    public static $defaultAction = "index";
-//
-    public static $controllerSuffix = "Controller";
-    public static $controllerPrefix = "";
-    public static $controllerAjaxSuffix = "Ajax";
-    public static $controllerAjaxPrefix = "";
-//
-    public static $controllerType = "";
+    /**
+     * $pathSegments is $_SERVER['PATH_INFO'] variable parts
+     * 
+     * @var array
+     */
+    private static $pathSegments = [];
 
-    public static function initiate() {
+    /**
+     * $controllerContext is the folder name of the subfolder in 'controllers' folder,
+     *  initiated with 'error' value as default 
+     * 
+     * @var string 
+     */
+    private static $controllerContext = "error";
+
+    /**
+     * Controller to be called class name , initiated with 'ErrorController' 
+     *  as default value
+     * 
+     * @var string 
+     */
+    private static $controllerName = "ErrorController";
+
+    /**
+     * Controller to be called method name , initiated with 'index' as default value
+     * 
+     * @var string 
+     */
+    private static $controllerAction = "index";
+
+    /**
+     * Controller to be called method parameters , initiated as empty array 
+     * 
+     * @var array 
+     */
+    private static $controllerActionParameters = [];
+
+    /**
+     * init static method is used for router initiation based on PATH_INFO information
+     * 
+     * @return void
+     * @throws Exception if path info is incorrect
+     */
+    public static function init() {
+        //get path info initiate static properties
+        if (!isset($_SERVER["PATH_INFO"])) {
+            return;
+        }
         try {
-            static::validatePathInfo();
-//
-            $_pathinfoParts = explode('/', static::$pathInfo);
-            $_counter = count($_pathinfoParts);
-//
-            static::$controllerType = ControllerType::getType($_pathinfoParts[0]);
-            static::$controller = $_pathinfoParts[1];
-            static::$controllerAction = $_pathinfoParts[2];
-            for ($i = 3; $i < $_counter; $i++) {
-                static::$controllerParameters[$i - 3] = $_pathinfoParts[$i];
-            }
+            static::initPathSegments();
+            static::initControllerParts();
         } catch (Exception $ex) {
-//            throw new RouterException($ex->getMessage());
+            throw new Exception("Path info missing information." . $ex->getMessage());
         }
-    }
-
-    public static function getController() {
-        if (static::$controller === "") {
-            static::initiate();
-        }
-        if (static::$controllerType === ControllerType::NAVIGATION) {
-            return static::$controllerPrefix . static::$controller . static::$controllerSuffix;
-        } else if (static::$controllerType == ControllerType::AJAX) {
-            return static::$controllerAjaxPrefix . static::$controller . static::$controllerAjaxSuffix;
-        }
-        throw new RouterException("Controller type is not valid");
-    }
-
-    public static function getControllerPath() {
-        try {
-            $controllerName = static::getController();
-            return static::$controllerPath . "/" . ControllerType::getName(static::$controllerType) . "/" . $controllerName;
-        } catch (Exception $ex) {
-            throw new RouterException("Controller type is not valid. " . $ex->getMessage());
-        }
-    }
-
-    public static function getAction() {
-        if (static::$controllerAction === "") {
-            static::initiate();
-        }
-        return static::$controllerAction;
-    }
-
-    public static function getParameters() {
-        if (static::$controllerParameters === "") {
-            static::initiate();
-        }
-        return static::$controllerParameters;
     }
 
     /**
-     * ValidatePathInfo static method validates and returns pathInfo data
+     * initPathSegments is called from 'init' to initiate static $pathSegmennts property
+     *  with PATH_INFO exploded parts
      */
-    private static function validatePathInfo() {
-        if (!isset($_SERVER["PATH_INFO"])) {
-            throw new RouterException('Path Info was not Found');
-        }
+    private static function initPathSegments() {
+        $pathInfo = trim(strtolower($_SERVER["PATH_INFO"]), '/');
+        static::$pathSegments = explode("/", $pathInfo);
+    }
 
-        $_pathInfoParts = explode('/', $_SERVER["PATH_INFO"]);
-        $_counter = count($_pathInfoParts);
-
-        if ($_counter === 0) {
-            static::$pathInfo = static::$defaultController . "/" . static::$defaultAction . "/";
-        } else {
-//remove first empty pathInfo
-            array_shift($_pathInfoParts);
-            $_counter--;
-            if ($_counter === 1) {
-                static::$pathInfo = $_pathInfoParts[0] . "/" . static::$defaultAction . "/";
-            } else if ($_counter === 2) {
-                static::$pathInfo = $_pathInfoParts[0] . "/" . $_pathInfoParts[1] . "/";
-            } else {
-                static::$pathInfo = implode('/', $_pathInfoParts);
-            }
+    /**
+     * initControllerParts  is called from 'init' to initiate static properties
+     *  that are used for routing Controllers
+     */
+    private static function initControllerParts() {
+        if (count(static::$pathSegments) < 1) {
+            return;
         }
+        $pathSegments = static::$pathSegments;
+        $counter = count($pathSegments);
+        //initiate controller information
+        switch ($counter) {
+            case 3:
+                static::$controllerAction = array_splice($pathSegments, 2, 1)[0];
+            case 2:
+                static::$controllerName = array_splice($pathSegments, 1, 1)[0];
+            case 1:
+                static::$controllerContext = array_splice($pathSegments, 0, 1)[0];
+                break;
+            default:
+                static::$controllerAction = array_splice($pathSegments, 2, 1)[0];
+                static::$controllerName = array_splice($pathSegments, 1, 1)[0];
+                static::$controllerContext = array_splice($pathSegments, 0, 1)[0];
+
+                $counter-=3;
+                static::$controllerActionParameters = array_slice($pathSegments, 0, $counter);
+        }
+    }
+
+    /**
+     * getControllerPath static method used to return the full path of the controller 
+     *  file that is requested by the user
+     * 
+     * @return string
+     */
+    public static function getControllerPath() {
+        return static::$controllerContext . "/" . static::getControllerName() . ".php";
+    }
+
+    /**
+     * Getter static method used for getting cotroller folder-context
+     * 
+     * @return string
+     */
+    public static function getControllerContext() {
+        return static::$controllerContext;
+    }
+
+    /**
+     * Getter static method used for getting cotroller class name 
+     * 
+     * @return string
+     */
+    public static function getControllerName() {
+        $controllerName = ControllerType::getPrefix(static::$controllerContext)
+                . static::$controllerName
+                . ControllerType::getSuffix(static::$controllerContext);
+        return ucfirst($controllerName);
+    }
+
+    /**
+     * Getter static method for getting controller method name that will be called
+     * 
+     * @return string
+     */
+    public static function getControllerAction() {
+        return static::$controllerAction;
+    }
+
+    /**
+     * Getter static method for getting the controller method parameters of the 
+     *  method to be called
+     * 
+     * @return array
+     */
+    public static function getControllerActionParameters() {
+        return static::$controllerActionParameters;
+    }
+
+    /**
+     * Getter static method for getting a codename used in views and Authorization
+     * 
+     * @return string 
+     */
+    public static function getPageCodeName() {
+        return strtolower(static::$controllerName . static::$controllerAction);
     }
 
 }

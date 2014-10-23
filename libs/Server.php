@@ -1,6 +1,7 @@
 <?php
 
 include "./libs/Router.php";
+include './libs/Authorization.php';
 include "./libs/Database.php";
 include "./libs/Model.php";
 include "./libs/Controller.php";
@@ -29,6 +30,8 @@ class Server implements IServer {
     function run() {
         try {
             Router::init();
+
+            Authorization::check(Router::getPageCodeName());
 
             Model::init(new DatabaseProvider(
                     Server::DRIVER, Server::HOSTNAME, Server::PORT

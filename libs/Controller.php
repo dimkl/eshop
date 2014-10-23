@@ -1,6 +1,5 @@
 <?php
 
-include './libs/Authorization.php';
 include './libs/View.php';
 
 /**
@@ -37,9 +36,6 @@ class Controller implements IController {
     }
 
     public function execute() {
-        if (!Authorization::check()) {
-            
-        }
         try {
             return call_user_func_array([$this, $this->action], $this->actionParams);
         } catch (Exception $ex) {

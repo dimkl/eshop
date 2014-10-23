@@ -1,6 +1,7 @@
 <?php
 
 require_once './models/CommentModel.php';
+require_once './models/UserModel.php';
 
 /**
  * Description of CommentUserModel
@@ -10,7 +11,7 @@ require_once './models/CommentModel.php';
 class CommentUserModel extends CommentModel {
 
     protected static $table = 'Comment';
-    protected $publicProperties = ['id', 'userid', 'productid', 'content', 'creationDateTime', 'rating', 'user'];
+    protected $publicProperties = ['id', 'userid', 'productid', 'content', 'creationDatetime', 'rating', 'user'];
     private $user;
 
     /**
@@ -27,7 +28,7 @@ class CommentUserModel extends CommentModel {
         try {
 
             $table = static::$table;
-            $statement = static::$db->pdo->prepare('Select Comment.*,User.* from Comment join User on User.id=Comment.userid where `' . $column . '`=?;');
+            $statement = static::$db->pdo->prepare('Select Comment.*,User.* from Comment join User on User.id=Comment.userid where Comment.' . $column . '=? order by Comment.id desc;');
             $statement->execute([$value]);
             $commentUsersAssoc = $statement->fetchAll(PDO::FETCH_ASSOC);
             if (empty($commentUsersAssoc)) {

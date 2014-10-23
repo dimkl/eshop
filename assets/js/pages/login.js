@@ -1,87 +1,65 @@
-
 $(document).ready(function () {
-    /**
-     * Serialize form in json format
-     * 
-     * @returns {Array|RegExp.fn.serializeObject.result}
-     */
-    $.fn.serializeObject = function () {
-        "use strict";
-        var result = {};
-        var extend = function (i, element) {
-            var node = result[element.name];
-
-            // If node with same name exists already, need to convert it to an array as it
-            // is a multi-value field (i.e., checkboxes)
-
-            if ('undefined' !== typeof node && node !== null) {
-                if ($.isArray(node)) {
-                    node.push(element.value);
-                } else {
-                    result[element.name] = [node, element.value];
-                }
-            } else {
-                result[element.name] = element.value;
-            }
-        };
-
-        $.each(this.serializeArray(), extend);
-        return result;
+    var loginBtn = $('#login-btn');
+    var showPasswordBtn = $('#showPassword-btn');
+    var form = $('#login-form');
+    var statusLabel = $('#statusLabel');
+    var statusLabelClass = {
+        'error': 'col-xs-12 label label-danger',
+        'success': 'col-xs-12 label label-success'
     };
-    /**
-     * Submit form with ajax method
-     * 
-     * @returns void
-     */
-    $.fn.ajaxFormSubmit = function () {
-        if (!$(this).is('form')) {
-            throw new Exception('Element is not a form.');
-        }
-        var serializedData = $(this).serializeObject();
-        var stringifiedData = "";
-        //check if serializedData is json
-        try {
-            stringifiedData = JSON.stringify(serializedData);
-        } catch (e) {
-            console.log(e);
-            throw new Exception('Element is not a form.');
-        }
-        $.ajax({type: "POST", url: "/ajax/user/create", data: stringifiedData})
-                .done(function (response) {
-                    console.log('done');
-                    console.log(response)
-                })
-                .fail(function (response) {
-                    console.log('fail', arguments);
-                    console.log(response)
-                });
-    };
-
-    var loginBtn = $('#btn-login');
-    var showPasswordBtn = $('#btn-showPassword');
     /**
      * Click event handler for login button
      */
     $(loginBtn).click(function () {
-        $('#login-form').ajaxFormSubmit();
+
+        $(form).ajaxFormSubmit({type: "POST", url: "ajax/account/login"},
+        function success(response) {
+            try {
+                response = JSON.parse(response);
+            } catch (e) {
+                throw "Invalid response. Response must be json";
+            }
+            if (response.status === "success") {
+                $(statusLabel).html(response.data.message);
+                $(statusLabel).attr('class', statusLabelClass.success);
+                setTimeout(function () {
+                    location.href = "navigation/product/preview/1";
+                }, 3000);
+            } else {
+                $(statusLabel).html(response.errormessage);
+                $(statusLabel).attr('class', statusLabelClass.error);
+            }
+        }, function error(response) {
+            $(statusLabel).html("An error occured during connecting to server. Please refresh and try again");
+        });
     });
     /**
      * Click event handler for show password checkBox
      */
     $(showPasswordBtn).click(function () {
         var key_attr = $('#key').attr('type');
-
         if (key_attr != 'text') {
 
             $('.checkbox').addClass('show');
             $('#key').attr('type', 'text');
-
         } else {
 
             $('.checkbox').removeClass('show');
             $('#key').attr('type', 'password');
-
         }
-
+    });
+    /***************************************************/
+    /*                Initiation                       */
+    /***************************************************/
+    //validation 
+    $(form).validate({
+        rules: {
+            username: {
+                required: true
+            },
+            password: {
+                required: true
+            }
+        }
     });
 });

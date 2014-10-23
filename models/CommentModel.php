@@ -8,7 +8,7 @@
 class CommentModel extends Model {
 
     protected static $table = 'Comment';
-    protected $publicProperties = ['id', 'userid', 'productid', 'content', 'creationDateTime', 'rating'];
+    protected $publicProperties = ['id', 'userid', 'productid', 'content', 'creationDatetime', 'rating'];
     private $id;
     private $userid;
     private $productid;
@@ -34,6 +34,7 @@ class CommentModel extends Model {
                     . $table . '(userid,productid,content,rating) '
                     . 'Values(:userid,:productid,:content,:rating)');
             $result = $statement->execute($values);
+            $this->setId(static::$db->pdo->lastInsertId());
             return $result;
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -99,8 +100,8 @@ class CommentModel extends Model {
         if (!is_string($creationDatetime)) {
             throw new Exception('$creationDatetime must be a datetime');
         }
-        if (is_null($this->creationDatetime)) {
-            $this->creationDatetime = $creationDatetime;
+        if (empty($this->creationDatetime)) {
+            $this->creationDatetime = date('Y-m-d H:i:s');
         }
         return $this->creationDatetime;
     }

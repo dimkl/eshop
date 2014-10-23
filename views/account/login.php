@@ -26,19 +26,20 @@
                         <div class="form-wrap">
                             <h1>Log in with your email account</h1>
                             <form role="form"  method="post" id="login-form" autocomplete="off">
+                                <div id="statusLabel"></div>
                                 <div class="form-group">
                                     <label for="email" class="sr-only">Email</label>
                                     <input type="email" name="email" id="email" class="form-control" placeholder="somebody@example.com">
                                 </div>
                                 <div class="form-group">
                                     <label for="key" class="sr-only">Password</label>
-                                    <input type="password" name="key" id="key" class="form-control" placeholder="Password">
+                                    <input type="password" name="password" id="key" class="form-control" placeholder="Password">
                                 </div>
                                 <div class="checkbox">
-                                    <span class="character-checkbox" id="btn-showPassword"></span>
+                                    <span class="character-checkbox" id="showPassword-btn"></span>
                                     <span class="label">Show password</span>
                                 </div>
-                                <input type="button" id="btn-login" class="btn btn-custom btn-lg btn-block" value="Log in">
+                                <input type="button" id="login-btn" class="btn btn-custom btn-lg btn-block" value="Log in">
                             </form>
                             <hr>
                         </div>
@@ -51,6 +52,8 @@
         <script src="assets/js/libs/jquery-1.11.1.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="assets/js/libs/bootstrap.min.js"></script>
+        <!--script for validation -->
+        <script src="assets/js/libs/jquery.validate.min.js"></script>
         <!-- genaral javascript file -->
         <script src="assets/js/main.js"></script>
         <!-- page secific script -->

@@ -22,19 +22,19 @@
         <div class="container" id="wrap">
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
-                    <form action="r" method="post" accept-charset="utf-8" class="form" role="form">   <legend>Sign Up</legend>
-                        <h4>It's free and always will be.</h4>
+                    <form method="post" accept-charset="utf-8" class="form" role="form" id="register-form">   
+                        <legend>Register</legend>
+                        <h4 id="statusLabel"></h4>
+                        <input type="text" name="firstname" value="" class="form-control input-lg" placeholder="First Name"  />  
+                        <input type="text" name="lastname" value="" class="form-control input-lg" placeholder="Last Name"  />        
+                        <input type="text" name="email" value="" class="form-control input-lg" placeholder="Your Email"  />
+                        <input type="password" id="password" name="password" value="" class="form-control input-lg" placeholder="Password"  />
+                        <input type="password" name="confirm_password" value="" class="form-control input-lg" placeholder="Confirm Password"  />                   
                         <div class="row">
-                            <div class="col-xs-6 col-md-6">
-                                <input type="text" name="firstname" value="" class="form-control input-lg" placeholder="First Name"  />                        </div>
-                            <div class="col-xs-6 col-md-6">
-                                <input type="text" name="lastname" value="" class="form-control input-lg" placeholder="Last Name"  />                        </div>
-                        </div>
-                        <input type="text" name="email" value="" class="form-control input-lg" placeholder="Your Email"  /><input type="password" name="password" value="" class="form-control input-lg" placeholder="Password"  /><input type="password" name="confirm_password" value="" class="form-control input-lg" placeholder="Confirm Password"  />                    <label>Birth Date</label>                    <div class="row">
                         </div>
                         <br />
                         <span class="help-block">By clicking Create my account, you agree to our Terms and that you have read our Data Use Policy, including our Cookie Use.</span>
-                        <button class="btn btn-lg btn-primary btn-block signup-btn" type="submit">
+                        <button class="btn btn-lg btn-primary btn-block signup-btn" type="button" id="register-btn" >
                             Create my account</button>
                     </form>          
                 </div>
@@ -46,6 +46,8 @@
     <script src="assets/js/libs/jquery-1.11.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="assets/js/libs/bootstrap.min.js"></script>
+    <!--script for validation -->
+    <script src="assets/js/libs/jquery.validate.min.js"></script>
     <!-- genaral javascript file -->
     <script src="assets/js/main.js"></script>
     <!-- page secific script -->

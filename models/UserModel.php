@@ -15,14 +15,18 @@ class UserModel extends Model {
     private $firstname;
     private $lastname;
 
-    public function authenticate() {
+    /**
+     * isAuthenticated method checks if user instance is authenticated and returns
+     *  usermodel form database if it is authenticated or false if not
+     * @return boolean|UserModel 
+     */
+    public function isAuthenticated() {
         try {
-            $table = static::getTable();
-            $statement = static::$db->pdo->prepare('Select email, password from ' . $table . ' where email=? and password=?');
+            $statement = static::$db->pdo->prepare('Select id, email,firstname,lastname from User where email=? and password=?');
             $statement->execute([$this->getEmail(), $this->getPassword()]);
-            $result = $statement->fetch(PDO::FETCH_ASSOC);
-            if ($result !== FALSE) {
-                return TRUE;
+            $userAssoc = $statement->fetch(PDO::FETCH_ASSOC);
+            if ($userAssoc !== FALSE) {
+                return new UserModel($userAssoc);
             }
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -48,6 +52,23 @@ class UserModel extends Model {
             echo $e->getMessage();
             return false;
         }
+    }
+
+    public function allowedComment($productid) {
+        if (!is_string($productid) && !is_int($productid)) {
+            return false;
+        }
+        try {
+            $statement = static::$db->pdo->prepare('Select * from  Comment where  userid=? and productid=?;');
+            $statement->execute([$this->id, intval($productid)]);
+            $result = $statement->fetch();
+            if ($result === FALSE) {
+                return TRUE;
+            }
+        } catch (Exception $e) {
+            
+        }
+        return FALSE;
     }
 
     public function getId() {

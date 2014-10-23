@@ -8,13 +8,20 @@
 class AccountController extends Controller {
 
     protected function register() {
-        echo "product page default";
-//        View::load("error/default.html");
+        View::render('account/register.php');
     }
 
     protected function login() {
-        echo "product page default";
-//        View::load("error/default.html");
+        View::render('account/login.php');
+    }
+
+    protected function logout() {
+        try {
+            Authorization::unAuthorizeUser();
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+        View::render('account/login.php');
     }
 
 }

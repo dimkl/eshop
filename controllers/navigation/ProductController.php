@@ -9,16 +9,22 @@ class ProductController extends Controller {
 
     protected function preview($productid) {
         $productid = intval($productid);
-        $userid = intval(Authorization::getCurrrentUserid());
         //getData
         Model::load(['ProductModel', 'UserModel', 'CommentUserModel']);
 
         $comments = CommentUserModel::findBy('productid', $productid);
         $product = ProductModel::findById($productid);
-        $user = UserModel::findById(1);
-        var_dump($comments);
+        $user = null;
+        $canComment = FALSE;
+        try {
+            $userid = intval(Authorization::getCurrrentUserid());
+            $user = UserModel::findById($userid);
+            $canComment = $user->allowedComment($productid);
+        } catch (Exception $ex) {
+            
+        }
         //
-        View::render('product/preview.php', compact('comments', 'product', 'user'));
+        View::render('product/preview.php', compact('comments', 'product', 'user', 'canComment'));
     }
 
 }

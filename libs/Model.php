@@ -23,7 +23,7 @@ interface IModelFactory {
  *
  * @author dimkl
  */
-abstract class Model implements IModel, IModelFactory {
+class Model implements IModel, IModelFactory {
 
     const MODELBASEPATH = "./models/";
 
@@ -107,7 +107,7 @@ abstract class Model implements IModel, IModelFactory {
     }
 
     protected function setter($name, $value) {
-        $setter = 'set' . lcfirst($name);
+        $setter = 'set' . ucfirst($name);
         try {
             if (!method_exists($this, $setter)) {
                 throw new Exception('Method' . $name . ' supplied at Model setter does not exist.');
@@ -119,12 +119,12 @@ abstract class Model implements IModel, IModelFactory {
     }
 
     protected function getter($name) {
-        $getter = 'get' . lcfirst($name);
+        $getter = 'get' . ucfirst($name);
         try {
             if (!method_exists($this, $getter)) {
                 throw new Exception('Method' . $name . ' supplied at Model getter does not exist.');
             }
-            $this->$getter();
+            return $this->$getter();
         } catch (Exception $ex) {
             array_push($this->errorMessages, $ex->getMessage());
         }
@@ -133,18 +133,22 @@ abstract class Model implements IModel, IModelFactory {
     public function exportToArray() {
         $properties = [];
         foreach ($this->publicProperties as $name) {
-
             try {
                 $prop = $this->getter($name);
+                
+                if ($prop instanceof Model) {
+                    $prop = $prop->exportToArray();
+                }
+                if (!is_null($prop)) {
+                    $properties[$name] = $prop;
+                }
             } catch (Exception $ex) {
+                echo $ex->getMessage();
                 array_push($this->errorMessages, $ex->getMessage());
                 throw $ex;
             }
-
-            if (!is_null($prop)) {
-                $properties[$name] = $prop;
-            }
         }
+
         return $properties;
     }
 

@@ -291,7 +291,7 @@ class Router {
      * @return string 
      */
     public static function getPageCodeName() {
-        return strtolower(static::$controllerName . static::$controllerAction);
+        return strtolower(static::$controllerContext . '-' . static::$controllerName . '-' . static::$controllerAction);
     }
 
 }

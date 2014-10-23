@@ -6,5 +6,7 @@ include './libs/Server.php';
 // set to the user defined error handler
 $old_error_handler = set_error_handler("ErrorHandler::init");
 
+session_start();
+
 $server = new Server();
 $server->run();

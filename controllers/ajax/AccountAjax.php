@@ -1,8 +1,5 @@
 <?php
 
-include './libs/Request.php';
-include './libs/Response.php';
-
 /**
  * Description of AccountAjax
  *
@@ -10,8 +7,18 @@ include './libs/Response.php';
  */
 class AccountAjax extends Controller {
 
+    /**
+     * Register method inserts a user to the database and returns a Response.
+     * This ajax method is acceessible through url 'ajax/account/register' 
+     * and request must be with post http method.
+     */
     protected function register() {
-        Request::allowHttpMethod(HttpMethods::POST);
+        try {
+            Request::allowHttpMethod(HttpMethods::POST);
+            Authorization::ajaxAllowOnly([UserType::GUEST]);
+        } catch (Exception $ex) {
+            Response::error($ex->getMessage());
+        }
 
         $data = Request::getPostData();
         //check password confirm
@@ -31,7 +38,7 @@ class AccountAjax extends Controller {
             //save model
             if ($user->register()) {
                 //return response
-                Response::ok(["message" => "Register was successfull!!"]);
+                Response::ok(["message" => "Register was successfull!! In 3 sec you will be redirected to account/login page"]);
             }
             Response::error("Registration was not successfull." . implode('<br/>', $user->errorMessages));
         } catch (Exception $ex) {
@@ -39,10 +46,21 @@ class AccountAjax extends Controller {
         }
     }
 
+    /**
+     * Login method checks if a user with a username and password exists in the database
+     * and returns a Ressponse. This ajax method is acceessible through url 'ajax/account/login' 
+     * and request must be with post http method.
+     */
     protected function login() {
-        Request::allowHttpMethod(HttpMethods::POST);
-        $data = Request::getPostData();
+
         try {
+            Request::allowHttpMethod(HttpMethods::POST);
+            Authorization::ajaxAllowOnly([UserType::GUEST]);
+        } catch (Exception $ex) {
+            Response::error($ex->getMessage());
+        }
+        try {
+            $data = Request::getPostData();
             //insert data to model
             Model::load(["UserModel"]);
             $user = new UserModel($data);

@@ -72,7 +72,7 @@
                                 </div>
                                 <!-- content -->
                                 <?php if ($canComment === TRUE): ?>
-                                    <div class="col-sm-12" >   
+                                    <div class="col-sm-12" id="commentForm-panel" >   
                                         <div class="page-header text-muted">
                                             <form class="row" id="commentForm">
                                                 <div id="statusLabel"></div>
@@ -100,7 +100,7 @@
                                             <div class="col-sm-10">
                                                 <h3><?php echo $comment->getContent(); ?></h3>
                                                 <h4 class="col-xs-12">
-                                                    <span class="label label-default col-xs-3"><?php echo "{$comment->getUser()->getFirstName()} {$comment->getUser()->getLastName()}"; ?> </span>
+                                                    <span class="label label-default col-xs-3"><?php echo $comment->getUser()->getFirstname() . " " . $comment->getUser()->getLastName(); ?> </span>
                                                     <span class="raty-readonly col-xs-5" data-score="<?php echo $comment->getRating(); ?>" data-number="10" ></span>
                                                     <span class="text-muted col-xs-4"><small><?php echo $comment->getCreationDatetime(); ?></small> </span>
                                                 </h4>

@@ -1,8 +1,5 @@
 <?php
 
-include './libs/Request.php';
-include './libs/Response.php';
-
 /**
  * Description of CommentAjax
  *
@@ -10,29 +7,37 @@ include './libs/Response.php';
  */
 class CommentAjax extends Controller {
 
+    /**
+     * Create method inserts a comment to the database and returns a Response.
+     * This ajax method is acceessible through url 'ajax/comment/create' 
+     * and request must be with post http method.
+     */
     protected function create() {
-        Request::allowHttpMethod(HttpMethods::POST);
-
-        $data = Request::getPostData();
         try {
+            Request::allowHttpMethod(HttpMethods::POST);
+            Authorization::ajaxAllowOnly([UserType::USER]);
+        } catch (Exception $ex) {
+            Response::error($ex->getMessage());
+        }
+        try {
+            $data = Request::getPostData();
             //insert data to model
             Model::load(['CommentModel', 'CommentUserModel']);
             $comment = new CommentModel($data);
             //setup userid
             $comment->setUserid(Authorization::getCurrrentUserid());
             //save model
-            if ($comment->create()) {
-                $commentUser = CommentUserModel::findBy('id', $comment->getId());
-                if (count($commentUser) !== 1) {
-                    Response::error("Error at fetching the comment from server");
-                }
-                $commentUser = $commentUser[0];
-                $data = $commentUser->exportToArray();
-                $data['message'] = 'Comment was created successfully!!';
-                //return response
-                Response::ok($data);
+            if (!$comment->create()) {
+                Response::error('Comment was not created successfully.<br/>' . implode('<br/>', $comment->errorMessages));
             }
-            Response::error('Comment was not created successfully.<br/>' . implode('<br/>', $comment->errorMessages));
+            $commentUser = CommentUserModel::allBy('id', $comment->getId());
+            if (count($commentUser) !== 1) {
+                Response::error("Error at fetching the comment from server");
+            }
+            $data = $commentUser[0]->exportToArray();
+            $data['message'] = 'Comment was created successfully!!';
+            //return response
+            Response::ok($data);
         } catch (Exception $ex) {
             Response::error('Error occured during registration: ' . $ex->getMessage());
         }

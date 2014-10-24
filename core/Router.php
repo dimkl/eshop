@@ -1,5 +1,26 @@
 <?php
 
+class RouterException extends Exception {
+    
+}
+
+interface IRouter {
+
+    public static function init();
+
+    public static function getControllerPath();
+
+    public static function getControllerContext();
+
+    public static function getControllerClass();
+
+    public static function getControllerAction();
+
+    public static function getControllerActionParameters();
+
+    public static function getPageCodeName();
+}
+
 /**
  * ControllerType abstract class used as Enumeration with more functionality 
  * for getting some information relevant with controller and controller type
@@ -139,7 +160,7 @@ abstract class ControllerType {
  *
  * @author dimkl
  */
-class Router {
+class Router implements IRouter {
 
     /**
      * $pathSegments is $_SERVER['PATH_INFO'] variable parts
@@ -162,7 +183,7 @@ class Router {
      * 
      * @var string 
      */
-    private static $controllerName = "ErrorController";
+    private static $controllerClass = "ErrorController";
 
     /**
      * Controller to be called method name , initiated with 'index' as default value
@@ -182,7 +203,7 @@ class Router {
      * init static method is used for router initiation based on PATH_INFO information
      * 
      * @return void
-     * @throws Exception if path info is incorrect
+     * @throws RoouterException if path info is incorrect
      */
     public static function init() {
         //get path info initiate static properties
@@ -193,7 +214,7 @@ class Router {
             static::initPathSegments();
             static::initControllerParts();
         } catch (Exception $ex) {
-            throw new Exception("Path info missing information." . $ex->getMessage());
+            throw new RoouterException("Path info missing information." . $ex->getMessage());
         }
     }
 
@@ -221,13 +242,13 @@ class Router {
             case 3:
                 static::$controllerAction = array_splice($pathSegments, 2, 1)[0];
             case 2:
-                static::$controllerName = array_splice($pathSegments, 1, 1)[0];
+                static::$controllerClass = array_splice($pathSegments, 1, 1)[0];
             case 1:
                 static::$controllerContext = array_splice($pathSegments, 0, 1)[0];
                 break;
             default:
                 static::$controllerAction = array_splice($pathSegments, 2, 1)[0];
-                static::$controllerName = array_splice($pathSegments, 1, 1)[0];
+                static::$controllerClass = array_splice($pathSegments, 1, 1)[0];
                 static::$controllerContext = array_splice($pathSegments, 0, 1)[0];
 
                 $counter-=3;
@@ -242,7 +263,7 @@ class Router {
      * @return string
      */
     public static function getControllerPath() {
-        return static::$controllerContext . "/" . static::getControllerName() . ".php";
+        return static::$controllerContext . "/" . static::getControllerClass() . ".php";
     }
 
     /**
@@ -259,11 +280,11 @@ class Router {
      * 
      * @return string
      */
-    public static function getControllerName() {
-        $controllerName = ControllerType::getPrefix(static::$controllerContext)
-                . static::$controllerName
+    public static function getControllerClass() {
+        $controllerClass = ControllerType::getPrefix(static::$controllerContext)
+                . static::$controllerClass
                 . ControllerType::getSuffix(static::$controllerContext);
-        return ucfirst($controllerName);
+        return ucfirst($controllerClass);
     }
 
     /**
@@ -291,7 +312,7 @@ class Router {
      * @return string 
      */
     public static function getPageCodeName() {
-        return strtolower(static::$controllerContext . '-' . static::$controllerName . '-' . static::$controllerAction);
+        return strtolower(static::$controllerContext . '-' . static::$controllerClass . '-' . static::$controllerAction);
     }
 
 }

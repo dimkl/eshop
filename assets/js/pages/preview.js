@@ -4,6 +4,7 @@ $(document).ready(function () {
     /***************************************************/
     //initialization of settings
     var form = $('#commentForm');
+    var formPanel = $('#commentForm-panel');
     var statusLabel = $('#statusLabel', form);
     var commentPanel = $('#commentPanel');
     var commentTemplate = $('#commentTemplate').html();
@@ -55,12 +56,11 @@ $(document).ready(function () {
                 //
                 ratyInit();
                 //remove commentForm
-                $(form).remove();
+                $(formPanel).remove();
             }
-        },
-                function error() {
-                    $(statusLabel).html("An error occured during connecting to server. Please refresh and try again");
-                });
+        }, function error() {
+            $(statusLabel).html("An error occured during connecting to server. Please refresh and try again");
+        });
     });
 
     /***************************************************/

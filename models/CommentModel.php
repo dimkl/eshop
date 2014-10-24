@@ -30,14 +30,15 @@ class CommentModel extends Model {
         $table = static::getTable();
 
         try {
-            $statement = static::$db->pdo->prepare('Insert into '
-                    . $table . '(userid,productid,content,rating) '
-                    . 'Values(:userid,:productid,:content,:rating)');
-            $result = $statement->execute($values);
-            $this->setId(static::$db->pdo->lastInsertId());
+            $result = static::$db->setQuerySql('Insert into '
+                            . $table . '(userid,productid,content,rating) '
+                            . 'Values(:userid,:productid,:content,:rating)')
+                    ->setQueryData($values)
+                    ->executeInsert()
+                    ->getResult();
+            $this->setId(static::$db->getLastInsertId());
             return $result;
         } catch (Exception $e) {
-            echo $e->getMessage();
             return false;
         }
     }

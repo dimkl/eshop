@@ -39,7 +39,7 @@ interface IModelFactory {
  */
 abstract class Model implements IModel, IModelFactory {
 
-    const MODELBASEPATH = "./models/";
+    const MODELBASEPATH = './models/';
 
     public $errorMessages = [];
     protected static $table = '';
@@ -64,7 +64,7 @@ abstract class Model implements IModel, IModelFactory {
      * @param type $dataArray
      * @throws ModelException
      */
-    protected function __construct($dataArray = []) {
+    public function __construct($dataArray = []) {
         if (!is_array($dataArray)) {
             throw new ModelException('Data supplied at Model constructor must be array.');
         }
@@ -114,7 +114,7 @@ abstract class Model implements IModel, IModelFactory {
                 return $result[0];
             }
             return null;
-        } catch (Exception $e) {
+        } catch (Exception $ex) {
             throw new DatabaseException($ex);
         }
     }
@@ -173,7 +173,7 @@ abstract class Model implements IModel, IModelFactory {
             foreach ($modelsArray as $modelName) {
                 $modelFile = Model::MODELBASEPATH . $modelName . '.php';
                 if (!file_exists($modelFile)) {
-                    throw new ModelException("Model class with name " . $modelName . " was not found");
+                    throw new ModelException('Model class with name ' . $modelName . ' was not found');
                 }
                 include $modelFile;
             }

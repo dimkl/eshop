@@ -3,10 +3,10 @@
 /**
  * Required libraries
  */
-include "./core/Router.php";
-include "./core/Database.php";
-include "./core/Model.php";
-include "./core/Controller.php";
+include './core/Router.php';
+include './core/Database.php';
+include './core/Model.php';
+include './core/Controller.php';
 
 /**
  * 
@@ -23,12 +23,12 @@ interface IServer {
  */
 class Server implements IServer {
 
-    const DRIVER = "mysql";
-    const HOSTNAME = "localhost";
+    const DRIVER = 'mysql';
+    const HOSTNAME = 'localhost';
     const PORT = 3306;
-    const USERNAME = "eshop";
-    const PASSWORD = "eshop";
-    const DATABASE = "eshop";
+    const USERNAME = 'eshop';
+    const PASSWORD = 'eshop';
+    const DATABASE = 'eshop';
 
     /**
      * run method inititiates all the processes that need to be done in order for 
@@ -49,7 +49,7 @@ class Server implements IServer {
                             , Router::getControllerActionParameters());
             $controller->execute();
         } catch (Exception $ex) {
-            header("Location: /Eshop/navigation/error/");
+            header('Location:' . APPLICATIONFOLDER . 'navigation/error/');
         }
     }
 

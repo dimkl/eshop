@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of CommentModel
+ * CommentModel is a model class that is used to process data from and to table 'Comment'
  *
  * @author dimkl
  */
@@ -22,10 +22,10 @@ class CommentModel extends Model {
      */
     public function create() {
         $values = [
-            "userid" => $this->getUserid(),
-            "productid" => $this->getProductid(),
-            "content" => $this->getContent(),
-            "rating" => $this->getRating()
+            'userid' => $this->getUserid(),
+            'productid' => $this->getProductid(),
+            'content' => $this->getContent(),
+            'rating' => $this->getRating()
         ];
         $table = static::getTable();
 

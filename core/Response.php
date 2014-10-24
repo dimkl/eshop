@@ -32,28 +32,28 @@ class Response implements IResponse {
 
     static function error($message) {
         if (!is_string($message)) {
-            throw new Exception("Response error method takes 'data' only as string");
+            throw new Exception('Response error method takes "data" only as string');
         }
         $response = [
-            "status" => "error",
-            "errormessage" => $message
+            'status' => 'error',
+            'errormessage' => $message
         ];
         exit(json_encode($response));
     }
 
     static function ok($data) {
         if (!is_array($data)) {
-            throw new Exception("Response ok method takes 'data' only as array");
+            throw new Exception('Response ok method takes "data" only as array');
         }
         $sanitizedData = Response::sanitize($data);
         if ($sanitizedData === NULL) {
-            Response::error("Response send method takes 'data' only as array");
+            Response::error('Response send method takes "data" only as array');
         }
 
         exit(json_encode([
-            "status" => "success",
-            "errormessage" => "",
-            "data" => $sanitizedData])
+            'status' => 'success',
+            'errormessage' => '',
+            'data' => $sanitizedData])
         );
     }
 

@@ -29,7 +29,7 @@ class ProductController extends Controller {
             //getData
             $product = ProductModel::findById($productid);
             if (empty($product)) {
-                throw new Exception("Product is missing");
+                throw new Exception('Product is missing');
             }
             $comments = CommentUserModel::allBy('productid', $productid);
             if ($userid !== NULL) {

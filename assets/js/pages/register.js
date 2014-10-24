@@ -22,7 +22,7 @@ $(document).ready(function () {
                 $(statusLabel).html(response.data.message);
                 $(statusLabel).attr('class', statusLabelClass.success);
                 setTimeout(function () {
-                    location.href = "navigation/account/login";
+                    location.href = $.main.pageContext + "navigation/account/login";
                 }, 3000);
             } else {
                 $(statusLabel).html(response.errormessage);

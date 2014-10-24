@@ -44,21 +44,20 @@
         }
         if (typeof successCallback !== "function") {
             successCallback = function (response) {
-                console.log('done');
                 console.log(response);
             };
         }
         if (typeof errorCallback !== "function") {
             errorCallback = function (response) {
-                console.log('fail', arguments);
                 console.log(response);
             };
         }
         var defaultAjaxHeaders = {
             contentType: "application/json; charset=UTF-8"
-        }
+        };
         var serializedData = $(this).serializeObject();
         var stringifiedData = "";
+        ajaxSettings.url = $.main.pageContext + ajaxSettings.url;
         //check if serializedData is json
         try {
             stringifiedData = JSON.stringify(serializedData);
@@ -69,6 +68,10 @@
         $.ajax(ajaxSettings)
                 .done(successCallback)
                 .fail(errorCallback);
+    };
+    //main configuration
+    $.main = {
+        pageContext: "/Eshop/"
     };
 
 })($);

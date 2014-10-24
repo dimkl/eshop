@@ -7,7 +7,7 @@
  */
 class View {
 
-    const VIEWBASEPATH = "./views/";
+    const VIEWBASEPATH = './views/';
 
     public static function render($pageFile, $dataArray = []) {
         if (!is_string($pageFile)) {
@@ -18,13 +18,13 @@ class View {
         }
 //        $isAssoc = array_keys($dataArray) !== range(0, count($dataArray) - 1);
 //        if (!$isAssoc) {
-//            throw new Exception('$dataArray supplied must be "associative" array.');
+//            throw new Exception('$dataArray supplied must be 'associative' array.');
 //        }
 
         try {
             $viewPath = View::VIEWBASEPATH . $pageFile;
             if (!file_exists($viewPath)) {
-                throw new Exception("View pageFile with name " . $pageFile . " was not found");
+                throw new Exception('View pageFile with name ' . $pageFile . ' was not found');
             }
 
             extract($dataArray);

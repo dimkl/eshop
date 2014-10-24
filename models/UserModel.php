@@ -75,10 +75,10 @@ class UserModel extends Model {
      */
     public function register() {
         $values = [
-            "email" => $this->getEmail(),
-            "firstname" => $this->getFirstname(),
-            "lastname" => $this->getLastname(),
-            "password" => $this->getPassword()
+            'email' => $this->getEmail(),
+            'firstname' => $this->getFirstname(),
+            'lastname' => $this->getLastname(),
+            'password' => $this->getPassword()
         ];
         $table = static::getTable();
 
@@ -115,7 +115,7 @@ class UserModel extends Model {
             }
             return FALSE;
         } catch (Exception $ex) {
-             throw new ModelException($ex);
+            throw new ModelException($ex);
         }
     }
 

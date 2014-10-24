@@ -33,12 +33,12 @@ class Request {
     public static function getPostData() {
         $post = $_POST;
         if (empty($post)) {
-            if (empty($GLOBALS["HTTP_RAW_POST_DATA"])) {
-                throw new Exception("No post Data was found");
+            if (empty($GLOBALS['HTTP_RAW_POST_DATA'])) {
+                throw new Exception('No post Data was found');
             }
-            $post = json_decode($GLOBALS["HTTP_RAW_POST_DATA"], true);
+            $post = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new Exception("Post data is not json data. please send json data");
+                throw new Exception('Post data is not json data. please send json data');
             }
         }
         return Request::sanitize($post);
@@ -86,10 +86,10 @@ class Request {
 
     public static function allowHttpMethod($httpMethod) {
         if (!is_int($httpMethod)) {
-            throw new Exception("Request::allowHttpMethod parameter httpMethod must be int type.");
+            throw new Exception('Request::allowHttpMethod parameter httpMethod must be int type.');
         }
         if (static::getHttpMethod() !== $httpMethod) {
-            Response::error("False http response");
+            Response::error('False http response');
         }
     }
 

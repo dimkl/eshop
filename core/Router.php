@@ -48,9 +48,9 @@ abstract class ControllerType {
      * @var array 
      */
     private static $navigationSettings = [
-        "context" => "navigation",
-        "prefix" => "",
-        "suffix" => "Controller"
+        'context' => 'navigation',
+        'prefix' => '',
+        'suffix' => 'Controller'
     ];
 
     /**
@@ -59,9 +59,9 @@ abstract class ControllerType {
      * @var array 
      */
     private static $ajaxSettings = [
-        "context" => "ajax",
-        "prefix" => "",
-        "suffix" => "Ajax"
+        'context' => 'ajax',
+        'prefix' => '',
+        'suffix' => 'Ajax'
     ];
 
     /**
@@ -70,9 +70,9 @@ abstract class ControllerType {
      * @var array 
      */
     private static $errorSettings = [
-        "context" => "navigation",
-        "prefix" => "",
-        "suffix" => "Controller"
+        'context' => 'navigation',
+        'prefix' => '',
+        'suffix' => 'Controller'
     ];
 
     /**
@@ -84,14 +84,14 @@ abstract class ControllerType {
      */
     public static function getContext($urlContext) {
         if (!is_string($urlContext)) {
-            throw new Exception("Url Context supplied in ControllerType.getContext method must be of type string");
+            throw new Exception('Url Context supplied in ControllerType.getContext method must be of type string');
         }
-        if ($urlContext === static::$navigationSettings["context"]) {
-            return static::$navigationSettings["context"];
-        } else if ($urlContext === static::$ajaxSettings["context"]) {
-            return static::$ajaxSettings["context"];
+        if ($urlContext === static::$navigationSettings['context']) {
+            return static::$navigationSettings['context'];
+        } else if ($urlContext === static::$ajaxSettings['context']) {
+            return static::$ajaxSettings['context'];
         } else {
-            return static::$errorSettings["context"];
+            return static::$errorSettings['context'];
         }
     }
 
@@ -104,11 +104,11 @@ abstract class ControllerType {
      */
     public static function getType($urlContext) {
         if (!is_string($urlContext)) {
-            throw new Exception("Url Context supplied in ControllerType.getType method must be of type string");
+            throw new Exception('Url Context supplied in ControllerType.getType method must be of type string');
         }
-        if ($urlContext === static::$navigationSettings["context"]) {
+        if ($urlContext === static::$navigationSettings['context']) {
             return ControllerType::NAVIGATION;
-        } else if ($urlContext === static::$ajaxSettings["context"]) {
+        } else if ($urlContext === static::$ajaxSettings['context']) {
             return ControllerType::AJAX;
         }
         return ControllerType::ERROR;
@@ -123,14 +123,14 @@ abstract class ControllerType {
      */
     public static function getPrefix($urlContext) {
         if (!is_string($urlContext)) {
-            throw new Exception("Url Context supplied in ControllerType.getPrefix method must be of type string");
+            throw new Exception('Url Context supplied in ControllerType.getPrefix method must be of type string');
         }
-        if ($urlContext === static::$navigationSettings["context"]) {
-            return static::$navigationSettings["prefix"];
-        } else if ($urlContext === static::$ajaxSettings["context"]) {
-            return static::$ajaxSettings["prefix"];
+        if ($urlContext === static::$navigationSettings['context']) {
+            return static::$navigationSettings['prefix'];
+        } else if ($urlContext === static::$ajaxSettings['context']) {
+            return static::$ajaxSettings['prefix'];
         }
-        return static::$errorSettings["prefix"];
+        return static::$errorSettings['prefix'];
     }
 
     /**
@@ -142,14 +142,14 @@ abstract class ControllerType {
      */
     public static function getSuffix($urlContext) {
         if (!is_string($urlContext)) {
-            throw new Exception("Url Context supplied in ControllerType.getSuffix method must be of type string");
+            throw new Exception('Url Context supplied in ControllerType.getSuffix method must be of type string');
         }
-        if ($urlContext === static::$navigationSettings["context"]) {
-            return static::$navigationSettings["suffix"];
-        } else if ($urlContext === static::$ajaxSettings["context"]) {
-            return static::$ajaxSettings["suffix"];
+        if ($urlContext === static::$navigationSettings['context']) {
+            return static::$navigationSettings['suffix'];
+        } else if ($urlContext === static::$ajaxSettings['context']) {
+            return static::$ajaxSettings['suffix'];
         }
-        return static::$errorSettings["suffix"];
+        return static::$errorSettings['suffix'];
     }
 
 }
@@ -175,7 +175,7 @@ class Router implements IRouter {
      * 
      * @var string 
      */
-    private static $controllerContext = "error";
+    private static $controllerContext = 'error';
 
     /**
      * Controller to be called class name , initiated with 'ErrorController' 
@@ -183,14 +183,14 @@ class Router implements IRouter {
      * 
      * @var string 
      */
-    private static $controllerClass = "ErrorController";
+    private static $controllerClass = 'ErrorController';
 
     /**
      * Controller to be called method name , initiated with 'index' as default value
      * 
      * @var string 
      */
-    private static $controllerAction = "index";
+    private static $controllerAction = 'index';
 
     /**
      * Controller to be called method parameters , initiated as empty array 
@@ -207,14 +207,14 @@ class Router implements IRouter {
      */
     public static function init() {
         //get path info initiate static properties
-        if (!isset($_SERVER["PATH_INFO"])) {
+        if (!isset($_SERVER['PATH_INFO'])) {
             return;
         }
         try {
             static::initPathSegments();
             static::initControllerParts();
         } catch (Exception $ex) {
-            throw new RoouterException("Path info missing information." . $ex->getMessage());
+            throw new RoouterException('Path info missing information.' . $ex->getMessage());
         }
     }
 
@@ -223,8 +223,8 @@ class Router implements IRouter {
      *  with PATH_INFO exploded parts
      */
     private static function initPathSegments() {
-        $pathInfo = trim(strtolower($_SERVER["PATH_INFO"]), '/');
-        static::$pathSegments = explode("/", $pathInfo);
+        $pathInfo = trim(strtolower($_SERVER['PATH_INFO']), '/');
+        static::$pathSegments = explode('/', $pathInfo);
     }
 
     /**
@@ -263,7 +263,7 @@ class Router implements IRouter {
      * @return string
      */
     public static function getControllerPath() {
-        return static::$controllerContext . "/" . static::getControllerClass() . ".php";
+        return static::$controllerContext . '/' . static::getControllerClass() . '.php';
     }
 
     /**

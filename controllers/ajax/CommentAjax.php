@@ -32,7 +32,7 @@ class CommentAjax extends Controller {
             }
             $commentUser = CommentUserModel::allBy('id', $comment->getId());
             if (count($commentUser) !== 1) {
-                Response::error("Error at fetching the comment from server");
+                Response::error('Error at fetching the comment from server');
             }
             $data = $commentUser[0]->exportToArray();
             $data['message'] = 'Comment was created successfully!!';

@@ -103,7 +103,7 @@ class DatabaseProvider implements IDatabaseProvider {
      * Keeps fetch Class to be used on fetch
      * @var string 
      */
-    private $fetchClass = "";
+    private $fetchClass = '';
 
     /**
      * Keeps query cache as array with sql query as key and query results as values
@@ -146,10 +146,10 @@ class DatabaseProvider implements IDatabaseProvider {
             return $this;
         }
         $this->statement->execute($this->queryData);
-        if ($this->fetchClass !== "") {
+        if ($this->fetchClass !== '') {
             $this->queryResult = $this->statement->fetchAll(PDO::FETCH_CLASS, $this->fetchClass);
             //reset fetch
-            $this->fetchClass = "";
+            $this->fetchClass = '';
         } else {
             $this->queryResult = $this->statement->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -226,7 +226,7 @@ class DatabaseProvider implements IDatabaseProvider {
      */
     public function setResultClass($className) {
         if (!is_string($className)) {
-            throw new DatabaseException("Set Result Class of DatabaseProvider must be of type string");
+            throw new DatabaseException('Set Result Class of DatabaseProvider must be of type string');
         }
         $this->fetchClass = $className;
 

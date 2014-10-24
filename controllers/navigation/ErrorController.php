@@ -19,7 +19,7 @@ class ErrorController extends Controller {
         } catch (Exception $ex) {
             throw new ControllerException($ex);
         }
-        View::render("error/default.html");
+        View::render('error/default.html');
     }
 
     /**
@@ -35,7 +35,7 @@ class ErrorController extends Controller {
             throw new ControllerException($ex);
         }
 
-        View::render("error/404.html");
+        View::render('error/404.html');
     }
 
     /**
@@ -51,7 +51,7 @@ class ErrorController extends Controller {
             throw new ControllerException($ex);
         }
 
-        View::render("error/forbidden.html");
+        View::render('error/forbidden.html');
     }
 
 }

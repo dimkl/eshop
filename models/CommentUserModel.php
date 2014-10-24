@@ -31,6 +31,10 @@ class CommentUserModel extends CommentModel {
      */
     private $user;
 
+    public function __construct($dataArray = array()) {
+        parent::__construct($dataArray);
+    }
+
     /**
      * allBy method is used to get all Comments with their User information 
      *  with the use of $column and $id as criteria

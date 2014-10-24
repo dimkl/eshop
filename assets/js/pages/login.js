@@ -23,7 +23,7 @@ $(document).ready(function () {
                 $(statusLabel).html(response.data.message);
                 $(statusLabel).attr('class', statusLabelClass.success);
                 setTimeout(function () {
-                    location.href = "navigation/product/preview/1";
+                    location.href = $.main.pageContext + "navigation/product/preview/1";
                 }, 3000);
             } else {
                 $(statusLabel).html(response.errormessage);
